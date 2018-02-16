@@ -14,8 +14,8 @@ object Rules {
     override def isValid(v: T = p): Boolean = isEmpty(v)
 
     private def isEmpty(value: T) = value match {
-      case v if v.isInstanceOf[String] => value.asInstanceOf[String] != null && !value.asInstanceOf[String].isEmpty
-      case v if v.isInstanceOf[Iterable[Any]] => value.asInstanceOf[Iterable[Any]].nonEmpty
+      case str if str.isInstanceOf[String] => value.asInstanceOf[String] != null && !value.asInstanceOf[String].isEmpty
+      case iter if iter.isInstanceOf[Iterable[Any]] => value.asInstanceOf[Iterable[Any]].nonEmpty
       case _ => false
     }
 
