@@ -1,5 +1,6 @@
 # dingo
-A scala validator that is based on value classes mechanism.
+A scala validator that supports value classes mechanism.
+Currently no artifact yet.
 
 
 ### Example
