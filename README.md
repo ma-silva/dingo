@@ -13,13 +13,15 @@ val student = new Student("Klarenz","klarenz@mail.com","st1", 18, 99, true)
 println(EmailText(student.email).isValid) // Prints true.
 
 implicit val constraint = RichConstraint[Student](student)(s =>
-  s.name ? (valid, alphabetic, matches("^[A-z]+$")) ++
+  s.name ? (nonEmpty(), alphabetic(), matches("^[A-z]+$")) ++
   s.code ? (startsWith("s")) ++
-  s.email ? (valid, email) ++
-  s.enrolled ? TRUE
+  s.email ? (nonEmpty(), email()) ++
+  s.age ? gt(1) ++
+  s.enrolled ? TRUE()
 )
 
-student.validate //Calling validate requires implicit RichConstraint.
+student.validate //Calling validate requires implicit RichConstraint and throws exception if invalid.
+student.isValid //Return true if valid.
 ```
 
 ## License
