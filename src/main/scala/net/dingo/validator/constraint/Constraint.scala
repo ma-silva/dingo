@@ -7,7 +7,7 @@ trait Constraint {
   def isValid: Boolean
 }
 
-case class RichConstraint[T](domain: T)(mapping: T => Set[Result[Any]]) extends Constraint{
+final case class RichConstraint[T](domain: T)(mapping: T => Set[Result[Any]]) extends Constraint{
   override def validate: Unit = mapping(domain).map(_.get)
 
   override def isValid: Boolean = {
