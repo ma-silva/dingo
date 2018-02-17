@@ -4,7 +4,7 @@ import net.dingo.validator.util.Props
 
 import scala.util.{Failure, Success, Try}
 
-trait Result[+T] extends Any{
+trait Result[+T]{
   def get: T
 }
 
@@ -12,14 +12,16 @@ case object Valid extends Result[Try[Boolean]]{
   override def get: Try[Boolean] = Success(true)
 }
 
-class Invalid[T](v: T, e: ResultError) extends Result[Try[Exception]]{
-  override def get: Try[Exception] = Failure(throw new IllegalArgumentException(Props.readErr(v, e)))
+case class Invalid(re: ResultError) extends Result[Try[Exception]]{
+  override def get: Try[Exception] = Failure(throw new IllegalArgumentException(Props.readErr(re)))
 }
 
-final case class ResultError(errorKey: String, param: Any = "")
+final case class ResultError(key: String, value: Any, param: Any)
 
 trait ResultMessages[T] extends Any{
-  def err: ResultError
+  def err: String
+
+  def param: Any = ""
 
   def errMsg(msg: String): Rule[T]
 }

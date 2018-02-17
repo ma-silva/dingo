@@ -6,15 +6,15 @@ trait Validator[T] extends Any{
 
 trait Rule[T] extends Any with Validator[T] with ResultMessages[T] {
   override def errMsg(msg: String): Rule[T] = new CustomErrorRule[T](this) {
-    override def err: ResultError = ResultError(msg, param)
+    override def err: String = msg
   }
 
   def verify(v: T): Result[Any] = if (isValid(v))
-    Valid else new Invalid(v, err)
+    Valid else Invalid(ResultError(err, v, param))
 }
 
 sealed abstract class CustomErrorRule[T](that: Rule[T])extends Rule[T] {
   override def isValid(v: T): Boolean = that.isValid(v)
 
-  protected def param = that.err.param
+  override def param = that.param
 }

@@ -5,16 +5,15 @@ import net.dingo.validator.constraint._
 import org.scalatest.FlatSpec
 
 class ValidationSpec extends FlatSpec{
+
   final case class Student(name: String, email: String, code: String, age:Int, grade: Int, enrolled: Boolean) extends RichValidator
+
   val student = new Student("Klarenz","klarenz@mail.com","st1", 18, 99, true)
   val student2 = new Student("Claire","claire@mail.com","st2", 19, 80, false)
   val students = List(student, student2)
   val students2 = List(student)
 
-  "Student data" should "be valid" in {
-    println((student.name ? equalsTo("Klarenzs").errMsg("{0} is not equal to {1}")).map(_.get))
-    println((student.name ? equalsTo("Klarenz")).map(_.get))
-
+  "All validator" should "validate" in {
     assert((student.name ? equalsTo("Klarenz")).contains(Valid))
     assert(student.name equalsTo "Klarenz")
 
@@ -34,7 +33,7 @@ class ValidationSpec extends FlatSpec{
     assert(student.name endsWith "z")
 
     assert((student.code ? matches("^[a-zA-Z0-9_]*$")).contains(Valid))
-    assert(student.code matches("^[a-zA-Z0-9_]*$"))
+    assert(student.code matches "^[a-zA-Z0-9_]*$")
 
     assert((student.enrolled ? TRUE()).contains(Valid))
     assert(TRUE(student.enrolled).isValid())
@@ -62,12 +61,14 @@ class ValidationSpec extends FlatSpec{
   }
 
   "Student" should "valid" in {
-    implicit val constraint = RichConstraint[Student](student)(s =>
+    implicit val constrain: Constraint = RichConstraint[Student](student)(s =>
       s.name ? (nonEmpty(), alphabetic(), matches("^[A-z]+$")) ++
-      s.code ? (startsWith("s")) ++
-      s.email ? (nonEmpty(), email()) ++
-      s.age ? gt{1} ++
-      s.enrolled ? TRUE()
+        s.code ? startsWith("s") ++
+        s.email ? (nonEmpty(), email()) ++
+        s.age ? gt {
+          1
+        } ++
+        s.enrolled ? TRUE()
     )
 
 //    student.validate
