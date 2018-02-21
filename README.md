@@ -1,4 +1,4 @@
-# dingo
+# Dingo
 A scala validator that supports value classes mechanism.
 Currently no artifact yet.
 
